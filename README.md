@@ -6,7 +6,7 @@ Example rum app
 
 - lein cljsbuild auto
 - lein ring server-headless
-- http://localhost:3000/index.html
+- http://localhost:3000
 
 ## License
 

@@ -20,8 +20,7 @@
     [:h3 "stateful"]
     [:hr] [:div {:class "example" :id "stateful"}] [:hr]
     [:script {:src "js/rumshot.js"}]
-    [:script
-     "rumshot.core.start_label(document.getElementById(\"label\"));"]]))
+    [:script "rumshot.core.start();"]]))
 
 (defroutes handler
   (ANY "/"

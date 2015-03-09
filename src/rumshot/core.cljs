@@ -18,10 +18,12 @@
 (defn start-stateful [mount-el]
   (rum/mount (stateful "Clicks count") mount-el))
 
-(defn ^:export start []
+(defn start []
   (doseq [el (array-seq (.getElementsByClassName js/document "example"))]
     (case (.-id el)
       "label"
       (start-label el)
       "stateful"
       (start-stateful el))))
+
+(start)

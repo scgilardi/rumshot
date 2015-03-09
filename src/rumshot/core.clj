@@ -16,9 +16,9 @@
    [:body
     [:h1 "rumshot"]
     [:h3 "label"]
-    [:hr]
-    [:div {:id "label"}]
-    [:hr]
+    [:hr] [:div {:class "example" :id "label"}] [:hr]
+    [:h3 "stateful"]
+    [:hr] [:div {:class "example" :id "stateful"}] [:hr]
     [:script {:src "js/rumshot.js"}]
     [:script
      "rumshot.core.start_label(document.getElementById(\"label\"));"]]))

@@ -6,6 +6,7 @@
 /.nrepl-port
 /checkouts
 /classes
+/resources/public/js
 /target
 pom.xml
 pom.xml.asc

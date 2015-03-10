@@ -8,17 +8,25 @@
 (defn ring-init [])
 (defn ring-destroy [])
 
+(defn example [title & [id]]
+  (list
+   [:h3 {:class "example-title"} title]
+   [:div {:class "example" :id (or id title)}]
+   [:hr]))
+
 (defn rumshot-home-page
   [_]
   (html5
    [:head
-    [:title "rumshot"]]
+    [:title "rumshot"]
+    [:link {:rel "stylesheet" :href "style.css"}]]
    [:body
     [:h1 "rumshot"]
-    [:h3 "label"]
-    [:hr] [:div {:class "example" :id "label"}] [:hr]
-    [:h3 "stateful"]
-    [:hr] [:div {:class "example" :id "stateful"}] [:hr]
+    (example "label")
+    (example "stateful")
+    (example "stateful2" "stateful")
+    (example "bmi")
+    (example "binary clock")
     [:script {:src "js/rumshot.js"}]]))
 
 (defroutes handler

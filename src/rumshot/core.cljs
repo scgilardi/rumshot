@@ -34,7 +34,7 @@
      title ": " @local]))
 
 (defn start-stateful [mount-el]
-  (rum/mount (stateful "Clicks count") mount-el))
+  (rum/mount (stateful "Click count") mount-el))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Reagent stype BMI calculator

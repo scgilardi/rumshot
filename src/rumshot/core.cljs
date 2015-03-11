@@ -85,16 +85,13 @@
 
 (rum/defc bit < rum/static [n bit]
   (swap! bclock-renders inc)
-  [:td.bclock-bit
-   {:style (when (bit-test n bit)
-             {:backgroundColor @color})}])
-
-(defn bit-el [n b]
-  (case b
+  (case bit
     9 [:td]
     8 [:th]
     7 [:td n]
-    (bit n b)))
+    [:td.bclock-bit
+     {:style (when (bit-test n bit)
+               {:backgroundColor @color})}]))
 
 (defn clock-table [h m s ms]
   (let [hh   (quot h 10)

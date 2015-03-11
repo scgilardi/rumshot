@@ -80,14 +80,14 @@
 
 (def bclock-renders (atom 0))
 
-(rum/defc bit < rum/static [n bit]
+(rum/defc clock-cell < rum/static [form data]
   (swap! bclock-renders inc)
-  (case bit
-    9 [:td]
-    8 [:th]
-    7 [:td {:style {:text-align "center"}} n]
-    [:td.bclock-bit
-     {:style (when (bit-test n bit)
+  (case form
+    :b [:td]
+    :s [:th]
+    :n [:td {:style {:text-align "center"}} data]
+    [:td.bclock-bit ;; bit on-off
+     {:style (when (bit-test data form)
                {:backgroundColor @color})}]))
 
 (rum/defc render-count < rum/reactive [ref]
@@ -98,20 +98,20 @@
         mh (quot m 10) ml (mod  m 10)
         sh (quot s 10) sl (mod  s 10)
         th (quot t 100) tm (-> t (quot 10) (mod 10)) tl (mod t 10)
-        data [hh hl  0 mh ml  0 sh sl  0 th tm tl]
-        form [[9  3  8  9  3  8  9  3  8  3  3  3]
-              [9  2  8  2  2  8  2  2  8  2  2  2]
-              [1  1  8  1  1  8  1  1  8  1  1  1]
-              [0  0  8  0  0  8  0  0  8  0  0  0]
-              [7  7  8  7  7  8  7  7  8  7  7  7]]]
+        data  [hh hl :s mh ml :s sh sl :s th tm tl]
+        form [[:b  3 :s :b  3 :s :b  3 :s  3  3  3]
+              [:b  2 :s  2  2 :s  2  2 :s  2  2  2]
+              [ 1  1 :s  1  1 :s  1  1 :s  1  1  1]
+              [ 0  0 :s  0  0 :s  0  0 :s  0  0  0]
+              [:n :n :s :n :n :s :n :n :s :n :n :n]]]
     [:table.bclock
      (for [row (range 0 (count form))
            :let [row-form (form row)]]
        [:tr
         (for [col (range 0 (count row-form))
-              :let [cell-data (data col)
-                    cell-form (row-form col)]]
-          (rum/with-props bit cell-data cell-form :rum/key [row col]))])
+              :let [cell-form (row-form col)
+                    cell-data (data col)]]
+          (rum/with-props clock-cell cell-form cell-data :rum/key [row col]))])
      [:tr
       [:th {:colSpan 8}
        (rum/with-props render-count bclock-renders :rum/key "renders")]]]))

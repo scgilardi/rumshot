@@ -74,12 +74,9 @@
       [:span {:style {:color color}} diagnose]
       (slider :bmi bmi 10 50)]]))
 
-;; Generic render-count label
-
-(rum/defc render-count < rum/reactive [ref]
-  [:div.stats "Renders: " (rum/react ref)])
-
 ;; Binary clock
+
+;; Generic render-count label
 
 (def bclock-renders (atom 0))
 
@@ -88,38 +85,36 @@
   (case bit
     9 [:td]
     8 [:th]
-    7 [:td n]
+    7 [:td {:style {:text-align "center"}} n]
     [:td.bclock-bit
      {:style (when (bit-test n bit)
                {:backgroundColor @color})}]))
 
-(defn clock-table [h m s ms]
-  (let [hh   (quot h 10)
-        hl   (mod  h 10)
-        mh   (quot m 10)
-        ml   (mod  m 10)
-        sh   (quot s 10)
-        sl   (mod  s 10)
-        msh  (quot ms 100)
-        msm  (->   ms (quot 10) (mod 10))
-        msl  (mod  ms 10)
-        data [hh hl 0 mh ml 0 sh sl 0 msh msm msl]
-        form [[9  3 8  9  3 8  9  3 8   3   3   3]
-              [9  2 8  2  2 8  2  2 8   2   2   2]
-              [1  1 8  1  1 8  1  1 8   1   1   1]
-              [0  0 8  0  0 8  0  0 8   0   0   0]
-              [7  7 8  7  7 8  7  7 8   7   7   7]]]
+(rum/defc render-count < rum/reactive [ref]
+  [:div.stats "Renders: " (rum/react ref)])
+
+(defn clock-table [h m s t]
+  (let [hh (quot h 10) hl (mod  h 10)
+        mh (quot m 10) ml (mod  m 10)
+        sh (quot s 10) sl (mod  s 10)
+        th (quot t 100) tm (-> t (quot 10) (mod 10)) tl (mod t 10)
+        data [hh hl  0 mh ml  0 sh sl  0 th tm tl]
+        form [[9  3  8  9  3  8  9  3  8  3  3  3]
+              [9  2  8  2  2  8  2  2  8  2  2  2]
+              [1  1  8  1  1  8  1  1  8  1  1  1]
+              [0  0  8  0  0  8  0  0  8  0  0  0]
+              [7  7  8  7  7  8  7  7  8  7  7  7]]]
     [:table.bclock
-     (list
-      (for [row (range 0 (count form))]
-        [:tr
-         (for [col (range 0 (count (form row)))]
-           (rum/with-props bit (data col) ((form row) col)
-             :rum/key [row col]))])
-      [:tr
-       [:th {:colSpan 8}
-        (rum/with-props render-count bclock-renders
-          :rum/key "renders")]])]))
+     (for [row (range 0 (count form))
+           :let [row-form (form row)]]
+       [:tr
+        (for [col (range 0 (count row-form))
+              :let [cell-data (data col)
+                    cell-form (row-form col)]]
+          (rum/with-props bit cell-data cell-form :rum/key [row col]))])
+     [:tr
+      [:th {:colSpan 8}
+       (rum/with-props render-count bclock-renders :rum/key "renders")]]]))
 
 (rum/defc bclock < rum/reactive []
   (let [date (js/Date. (rum/react timer))]

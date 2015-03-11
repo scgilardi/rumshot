@@ -113,9 +113,13 @@
      (list
       (for [row (range 0 (count form))]
         [:tr
-         (for [col (range 0 (count (form 0)))]
-           (bit-el (data col) ((form row) col)))])
-      [:tr [:th {:colSpan 8} (render-count bclock-renders)]])]))
+         (for [col (range 0 (count (form row)))]
+           (rum/with-props bit (data col) ((form row) col)
+             :rum/key [row col]))])
+      [:tr
+       [:th {:colSpan 8}
+        (rum/with-props render-count bclock-renders
+          :rum/key "renders")]])]))
 
 (rum/defc bclock < rum/reactive []
   (let [date (js/Date. (rum/react timer))]
